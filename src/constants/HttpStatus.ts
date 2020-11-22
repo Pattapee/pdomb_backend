@@ -1,0 +1,9 @@
+export const HTTPSTATUS_OK = 200;
+export const HTTPSTATUS_CREATE = 201;
+export const HTTPSTATUS_ACCEPT = 202;
+
+export const HTTPSTATUS_BADREQUEST = 400;
+export const HTTPSTATUS_UNAUTHORIZED = 401;
+export const HTTPSTATUS_NOTFOUND = 404;
+
+export const HTTPSTATUS_CONFLICT = 409;
