@@ -1,5 +1,6 @@
 import { EntityRepository, MoreThanOrEqual, Repository } from 'typeorm'
 import Product from '../entities/Product'
+import ProductStatus from '../entities/ProductStatus'
 import ProductType from '../entities/ProductType'
 
 @EntityRepository(Product)
@@ -31,18 +32,18 @@ export class ProductRepository extends Repository<Product> {
     return result
   }
 
-  public async getAllByproductTypes(producttype: ProductType): Promise<Product[]> {
+  public async getAllByTypeID(id: number): Promise<Product[]> {
     const result = await this.find({
-      where: { producttype, activeStatus: true },
+      where: { producttype: { id }, activeStatus: true },
       order: { updated: 'DESC' },
       relations: ['producttype', 'productstatus']
     })
     return result
   }
 
-  public async getAllByTypeID(id: number): Promise<Product[]> {
+  public async getAllByStatusID(id: number): Promise<Product[]> {
     const result = await this.find({
-      where: { producttype: { id }, activeStatus: true },
+      where: { productstatus: { id }, activeStatus: true },
       order: { updated: 'DESC' },
       relations: ['producttype', 'productstatus']
     })

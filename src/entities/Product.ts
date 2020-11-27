@@ -47,6 +47,9 @@ export class Product {
   public ownerdepartment: string = ''
 
   @Column()
+  public owneridhistory: string = ''
+
+  @Column()
   public ownernamehistory: string = ''
 
   @Column()

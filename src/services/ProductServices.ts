@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import * as _ from 'lodash';
 import { identity } from 'lodash';
-import { getConnection } from 'typeorm';
+import moment from 'moment'
+import { EntityRepository, getConnection } from 'typeorm';
 import {
   HTTPSTATUS_ACCEPT,
   HTTPSTATUS_BADREQUEST,
@@ -47,6 +48,19 @@ export default class ProductServices {
     }
   };
 
+  public static getAllByproductStatus = async (req: Request, res: Response) => {
+    if (repository === undefined) {
+      initialize();
+    }
+    try {
+      const result = await repository.getAllByStatusID(+req.params.id);
+      res.status(HTTPSTATUS_OK).send(result);
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
+    }
+  };
+
   public static getOneProductByID = async (req: Request, res: Response) => {
     if (repository === undefined) {
       initialize();
@@ -59,6 +73,31 @@ export default class ProductServices {
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
     }
   };
+
+  public static getProductList = async (req: Request, res: Response) => {
+     if (repository === undefined) {
+      initialize();
+    }
+     try {
+      const {datecheckageproduct, productstatus, producttype} = req.body
+      let products = []
+      if (productstatus <= 0 ) {
+        products = await repository.getAllByTypeID(producttype)
+      } else {
+        products = await repository.getAllByStatusID(productstatus)
+      }
+      if (datecheckageproduct) {
+        products = await _.filter(products, (value, key) => {
+          const datecal = moment(value.datereceivedconfirm).add(+value.ageproductyear, 'year').add(+value.ageproductday, 'day')
+          return (moment(datecal).diff(moment(datecheckageproduct), 'days') <= 0)
+        })
+      }
+      res.status(HTTPSTATUS_OK).send(products);
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
+    }
+  }
 
   public static SaveProduct = async (req: Request, res: Response) => {
     if (repository === undefined) {
@@ -84,7 +123,9 @@ export default class ProductServices {
       ageproductmonth,
       ageproductday,
       atarea,
-      remark
+      remark,
+      owneridhistory,
+      ownernamehistory,
     } = req.body;
     const data = new Product();
     data.code = code
@@ -102,8 +143,8 @@ export default class ProductServices {
     data.ownerid = ownerid
     data.ownername = ownername
     data.ownerdepartment = ownerdepartment
-    data.ownernamehistory = ownername
-    data.ownerdepartmenthistory = ownerdepartment
+    data.owneridhistory = owneridhistory
+    data.ownernamehistory = ownernamehistory
     data.ageproductday = ageproductday
     data.ageproductmonth = ageproductmonth
     data.ageproductyear = ageproductyear
@@ -140,8 +181,8 @@ export default class ProductServices {
       ownerid,
       ownername,
       ownerdepartment,
+      owneridhistory,
       ownernamehistory,
-      ownerdepartmenthistory,
       ageproductyear,
       ageproductmonth,
       ageproductday,
@@ -166,8 +207,8 @@ export default class ProductServices {
     newdata.ownerid = ownerid
     newdata.ownername = ownername
     newdata.ownerdepartment = ownerdepartment
+    newdata.owneridhistory = owneridhistory
     newdata.ownernamehistory = ownernamehistory
-    newdata.ownerdepartmenthistory = ownerdepartmenthistory
     newdata.ageproductday = ageproductday
     newdata.ageproductmonth = ageproductmonth
     newdata.ageproductyear = ageproductyear

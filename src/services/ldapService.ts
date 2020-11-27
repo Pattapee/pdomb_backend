@@ -33,112 +33,117 @@ export default class LdapServices {
         res.status(HTTPSTATUS_OK).send({ data: 'Invalid login Active Directory' })
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
       res.status(HTTPSTATUS_BADREQUEST).send(err)
     }
   }
 
   public static searchByFullname = async (req: Request, res: Response) => {
     const mssql = require('mssql')
-    const item = []
+    let item = []
     const { fullname } = req.body
     // open connection db mssql and query get userid fullname email by fullname like 'req%'
-    // try {
-    //   await mssql.close()
-    //   await mssql.connect(userDB)
-    //   item = await mssql.query(
-    //     `select top 1 (u.userid) as userid,
-    //       (u.fullname) as fullname, (u.email) as email,
-    //       (u.POSITION1) as position, d.FULLNAME as department
-    //     from PC_USERS as u
-    //     LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
-    //     where u.FULLNAME like ('%${fullname}%')
-    //     and u.REMOVED is null`
-    //   )
-    //   await mssql.close()
-    // } catch (err) {
-    //   res.status(HTTPSTATUS_BADREQUEST).send(err)
-    // }
-    // IF all ok, Send Http code 200 respons
-    // res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    const result = {
-      userid: 739,
-      fullname: 'นายปฐพี สิงหะ',
-      email: 'pattapee@ombudsman.go.th',
-      position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-      department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    try {
+      await mssql.close()
+      await mssql.connect(userDB)
+      item = await mssql.query(
+        `select top 1 (u.userid) as userid,
+          (u.fullname) as fullname, (u.email) as email,
+          (u.POSITION1) as position, d.FULLNAME as department
+        from PC_USERS as u
+        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+        where u.FULLNAME like '%${fullname}%'
+        and u.REMOVED is null
+        and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+      )
+      await mssql.close()
+    } catch (err) {
+      console.error(err)
+      res.status(HTTPSTATUS_BADREQUEST).send(err)
     }
-    res.status(HTTPSTATUS_OK).send(result)
+    // IF all ok, Send Http code 200 respons
+    res.status(HTTPSTATUS_OK).send(item.recordset[0])
+    // Coding in my home
+    // const result = {
+    //   userid: 739,
+    //   fullname: 'นายปฐพี สิงหะ',
+    //   email: 'pattapee@ombudsman.go.th',
+    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
+    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    // }
+    // res.status(HTTPSTATUS_OK).send(result)
 
   }
 
   public static searchByUserID = async (req: Request, res: Response) => {
     const mssql = require('mssql')
-    const item = []
+    let item = []
     const { id } = req.body
     // open connection db mssql and query get userid fullname email by userid
-    // try {
-    //   await mssql.close()
-    //   await mssql.connect(userDB)
-    //   item = await mssql.query(
-    //     `select (u.userid) as userid,
-    //     (u.fullname) as fullname, (u.email) as email,
-    //     (u.POSITION1) as position, d.FULLNAME as department
-    //   from PC_USERS as u
-    //   LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
-    //   where u.USERID = '${id}'
-    //   and u.REMOVED is null`
-    //   )
-    //   await mssql.close()
-    // } catch (err) {
-    //   res.status(HTTPSTATUS_BADREQUEST).send(err)
-    // }
-    // IF all ok, Send Http code 200 respons
-    // res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    const result = {
-      userid: 739,
-      fullname: 'นายปฐพี สิงหะ',
-      email: 'pattapee@ombudsman.go.th',
-      position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-      department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    try {
+      await mssql.close()
+      await mssql.connect(userDB)
+      item = await mssql.query(
+        `select (u.userid) as userid,
+        (u.fullname) as fullname, (u.email) as email,
+        (u.POSITION1) as position, d.FULLNAME as department
+      from PC_USERS as u
+      LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+      where u.USERID = '${id}'
+      and u.REMOVED is null
+      and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+      )
+      await mssql.close()
+    } catch (err) {
+      res.status(HTTPSTATUS_BADREQUEST).send(err)
     }
-    res.status(HTTPSTATUS_OK).send(result)
+    // IF all ok, Send Http code 200 respons
+    res.status(HTTPSTATUS_OK).send(item.recordset[0])
+    // Coding in my home
+    // const result = {
+    //   userid: 739,
+    //   fullname: 'นายปฐพี สิงหะ',
+    //   email: 'pattapee@ombudsman.go.th',
+    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
+    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    // }
+    // res.status(HTTPSTATUS_OK).send(result)
   }
 
   public static searchByUsername = async (req: Request, res: Response) => {
     const mssql = require('mssql')
-    const item = []
+    let item = []
     const { username } = req.body
     // open connection db mssql and query get userid fullname email by userid
-    // try {
-    //   await mssql.close()
-    //   await mssql.connect(userDB)
-    //   item = await mssql.query(
-    //     `select (u.userid) as userid,
-    //       (u.fullname) as fullname, (u.email) as email,
-    //       (u.POSITION1) as position, d.FULLNAME as department
-    //     from PC_USERS as u
-    //     LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
-    //     where u.USERNAME = '${username}'
-    //     and u.REMOVED is null`
-    //   )
-    //   await mssql.close()
-    // } catch (err) {
-    //   res.status(HTTPSTATUS_BADREQUEST).send(err)
-    // }
-    // IF all ok, Send Http code 200 respons
-    // res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    const result = {
-      userid: 739,
-      fullname: 'นายปฐพี สิงหะ',
-      email: 'pattapee@ombudsman.go.th',
-      position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-      department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    try {
+      await mssql.close()
+      await mssql.connect(userDB)
+      item = await mssql.query(
+        `select (u.userid) as userid,
+          (u.fullname) as fullname, (u.email) as email,
+          (u.POSITION1) as position, d.FULLNAME as department
+        from PC_USERS as u
+        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+        where u.USERNAME = '${username}'
+        and u.REMOVED is null
+        and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+      )
+      await mssql.close()
+    } catch (err) {
+      console.error(err)
+      res.status(HTTPSTATUS_BADREQUEST).send(err)
     }
-    res.status(HTTPSTATUS_OK).send(result)
+    // IF all ok, Send Http code 200 respons
+    res.status(HTTPSTATUS_OK).send(item.recordset[0])
+    // Coding in my home
+    // const result = {
+    //   userid: 739,
+    //   fullname: 'นายปฐพี สิงหะ',
+    //   email: 'pattapee@ombudsman.go.th',
+    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
+    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
+    // }
+    // res.status(HTTPSTATUS_OK).send(result)
   }
 
 }
