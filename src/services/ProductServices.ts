@@ -84,7 +84,7 @@ export default class ProductServices {
       if (productstatus <= 0 ) {
         products = await repository.getAllByTypeID(producttype)
       } else {
-        products = await repository.getAllByStatusID(productstatus)
+        products = await repository.getAllByStatusAndType(productstatus, producttype)
       }
       if (datecheckageproduct) {
         products = await _.filter(products, (value, key) => {
@@ -126,6 +126,7 @@ export default class ProductServices {
       remark,
       owneridhistory,
       ownernamehistory,
+      detailproduct,
     } = req.body;
     const data = new Product();
     data.code = code
@@ -150,6 +151,7 @@ export default class ProductServices {
     data.ageproductyear = ageproductyear
     data.remark = remark
     data.atarea = atarea
+    data.detailproduct = detailproduct
     try {
       data.created = new Date();
       data.updated = new Date();
@@ -189,6 +191,7 @@ export default class ProductServices {
       remark,
       activeStatus,
       atarea,
+      detailproduct,
       id
     } = req.body;
     const newdata = new Product();
@@ -197,6 +200,7 @@ export default class ProductServices {
     newdata.datereceivedconfirm = datereceivedconfirm
     newdata.datewarranty = datewarranty
     newdata.name = name
+    newdata.detailproduct = detailproduct
     newdata.picture = picture
     newdata.price = price
     newdata.productstatus = productstatus

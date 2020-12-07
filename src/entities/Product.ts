@@ -23,6 +23,9 @@ export class Product {
   public name: string = ''
 
   @Column()
+  public detailproduct: string = ''
+
+  @Column()
   public datereceived: Date
 
   @Column()

@@ -50,6 +50,17 @@ export class ProductRepository extends Repository<Product> {
     return result
   }
 
+   public async getAllByStatusAndType(idstatus: number, idtype: number): Promise<Product[]> {
+     const result = await this.find({
+      where: { productstatus: {id: idstatus},
+               producttype: {id: idtype},
+                activeStatus: true },
+      order: { updated: 'DESC' },
+      relations: ['producttype', 'productstatus']
+    })
+     return result
+  }
+
   // fn delete Product
   public async Delete(product: Product): Promise<Product> {
     return await this.remove(product)
