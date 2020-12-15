@@ -39,5 +39,9 @@ export class ProductCategoryRepository extends Repository<ProductCategory> {
     return productcategory
   }
 
+  public async Count(): Promise<[ProductCategory[], number]> {
+    return await this.findAndCount()
+  }
+
 }
 export default ProductCategoryRepository

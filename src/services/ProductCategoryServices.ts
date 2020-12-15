@@ -28,7 +28,7 @@ export default class ProductCategoryService {
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
-      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find Product !!!' });
+      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
 
@@ -44,9 +44,22 @@ export default class ProductCategoryService {
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
-      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find Product !!!' });
+      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
+
+  public static getCountCategory = async (req: Request,    res: Response  ) => {
+    if (repository === undefined) {
+      initialize();
+    }
+    try {
+      const result = await repository.Count();
+      res.status(HTTPSTATUS_OK).send(result);
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
+    }
+  }
 
   public static saveProductCategory = async (req: Request, res: Response) => {
     if (repository === undefined) {
@@ -62,7 +75,7 @@ export default class ProductCategoryService {
       res.status(HTTPSTATUS_CREATE).send(result);
     } catch (e) {
       console.error(e);
-      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
 
@@ -80,7 +93,7 @@ export default class ProductCategoryService {
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
-      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
   public static deleteProductCategory = async (req: Request, res: Response) => {
@@ -95,7 +108,7 @@ export default class ProductCategoryService {
       }
     } catch (e) {
       console.error(e);
-      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find Product !!!' });
+      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
 }
