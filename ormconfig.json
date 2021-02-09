@@ -4,7 +4,7 @@
   "port": 3306,
   "username": "root",
   "password": "",
-  "database": "system_inventory",
+  "database": "system_product",
   "synchronize": true,
   "logging": false,
   "entities": [

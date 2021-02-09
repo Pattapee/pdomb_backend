@@ -1,36 +1,70 @@
 import axios from 'axios'
+import dotenv from 'dotenv';
 import { Request, Response } from 'express'
+import * as jwt from 'jsonwebtoken'
+import * as _ from 'lodash';
 import qs from 'qs'
 import {
   HTTPSTATUS_BADREQUEST,
   HTTPSTATUS_NOTFOUND,
   HTTPSTATUS_OK
 } from '../constants/HttpStatus'
+dotenv.config();
 
 const userDB = 'mssql://sa:Passw0rd!@192.168.2.21/OA_OMB'
 
 export default class LdapServices {
 
   public static userAuthen = async (req: Request, res: Response) => {
+    const mssql = require('mssql')
+    let user = []
     const { username, password } = req.body
+    let result = { data: { fullnamethai: '', userid: '' } }
     try {
-      const result = await axios({
+      result = await axios({
         method: 'post',
-        url: 'http://127.0.0.1/ldap/connect_ldap.php',
+        url: 'http://192.168.2.18/ldap/authenuser.php',
         data: qs.stringify({
           username,
-          pass: password
+          password
         }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       })
-      if (result.data === 1) {
-        // res.status(HTTPSTATUS_OK).send({ data: result.data })
-        // Coding in my home.
-        res.status(HTTPSTATUS_OK).send({ data: 1 })
+      if (typeof result.data === 'object' && result.data !== null) {
+        await mssql.connect(userDB)
+        user = await mssql.query(
+          `select top 1(u.userid) as userid,
+        (u.fullname) as fullname
+        from PC_USERS as u
+        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+        where u.username = '${username}'
+        and u.REMOVED is null
+        and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+        )
+        await mssql.close()
+        result.data.fullnamethai = user.recordset[0].fullname
+        result.data.userid = user.recordset[0].userid
+        const token = await jwt.sign({
+          data: result.data
+        }, process.env.signtoken, { expiresIn: '3h' });
+        res.status(HTTPSTATUS_OK).send(token)
       } else {
-        res.status(HTTPSTATUS_OK).send({ data: 'Invalid login Active Directory' })
+        res.status(HTTPSTATUS_OK).send(false)
+      }
+    } catch (err) {
+      console.error(err)
+      res.status(HTTPSTATUS_BADREQUEST).send(err)
+    }
+  }
+
+  public static decoadUser = async (req: Request, res: Response) => {
+    const { token } = req.body
+    try {
+      const user = await jwt.decode(token);
+      if (user) {
+        res.status(HTTPSTATUS_OK).send(user)
       }
     } catch (err) {
       console.error(err)

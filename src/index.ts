@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import * as express from 'express';
 import * as fs from 'fs';
 import helmet from 'helmet';
+import { Client } from 'ldapts'
 import cron from 'node-cron';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
