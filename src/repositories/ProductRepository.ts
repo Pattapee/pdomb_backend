@@ -1,7 +1,6 @@
-import { EntityRepository, MoreThanOrEqual, Repository } from 'typeorm'
+import { EntityRepository, getConnection, MoreThanOrEqual, Repository } from 'typeorm'
 import Product from '../entities/Product'
-import ProductStatus from '../entities/ProductStatus'
-import ProductType from '../entities/ProductType'
+import ProductCategory from '../entities/ProductCategory'
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
@@ -50,15 +49,17 @@ export class ProductRepository extends Repository<Product> {
     return result
   }
 
-   public async getAllByStatusAndType(idstatus: number, idtype: number): Promise<Product[]> {
-     const result = await this.find({
-      where: { productstatus: {id: idstatus},
-               producttype: {id: idtype},
-                activeStatus: true },
+  public async getAllByStatusAndType(idstatus: number, idtype: number): Promise<Product[]> {
+    const result = await this.find({
+      where: {
+        productstatus: { id: idstatus },
+        producttype: { id: idtype },
+        activeStatus: true
+      },
       order: { updated: 'DESC' },
       relations: ['producttype', 'productstatus']
     })
-     return result
+    return result
   }
 
   // fn delete Product
@@ -72,5 +73,33 @@ export class ProductRepository extends Repository<Product> {
     return product
   }
 
+  // fn Count Dashboard
+  public async getCountByCategoryandstatus(productcategory: ProductCategory, status: number): Promise<Product[]> {
+    // const result = await getConnection().createQueryBuilder()
+    //   .select('id')
+    //   .from(Product, 'prod')
+    //   .where('producttype.productcategory.id = :id', { id: 2 })
+    const result = await this.find({
+      // productstatus: { id: status },
+      where: { producttype: { productcategory: { id: 2 } } }
+      , relations: ['producttype']
+      // productcategorys: { id: 2 }
+      // producttype: { id: 59 }
+    })
+    // const users = await this.createQueryBuilder()
+    //   .select()
+    //   .from(User, 'user')
+    //   .where('user.name = :name', { name: 'John' })
+    //   .getMany();
+
+    // const result = await db.entityManager.query('select id, email, name from users where id=:PARAMID, [1]')
+    // SELECT * FROM`product` p
+    // left outer join product_type pt on pt.id = p.`producttypeId`
+    // left outer join product_category pc on pc.id = pt.productcategorysId
+    // where pc.id = 2 and p.`productstatusId` = 1
+
+    // console.log(result)
+    return result
+  }
 }
 export default ProductRepository

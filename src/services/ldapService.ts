@@ -82,10 +82,14 @@ export default class LdapServices {
       await mssql.connect(userDB)
       item = await mssql.query(
         `select top 1 (u.userid) as userid,
-          (u.fullname) as fullname, (u.email) as email,
-          (u.POSITION1) as position, d.FULLNAME as department
+          (u.fullname) as fullname
+		      ,(u.email) as email
+          ,(u.POSITION1) as position
+		     ,d.FULLNAME as subdepartment
+		      ,(d2.fullname) as department
         from PC_USERS as u
         LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+		    LEFT OUTER JOIN PC_USERS d2 on d2.USERID = d.PARENTID
         where u.FULLNAME like '%${fullname}%'
         and u.REMOVED is null
         and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
@@ -97,16 +101,6 @@ export default class LdapServices {
     }
     // IF all ok, Send Http code 200 respons
     res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    // const result = {
-    //   userid: 739,
-    //   fullname: 'นายปฐพี สิงหะ',
-    //   email: 'pattapee@ombudsman.go.th',
-    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
-    // }
-    // res.status(HTTPSTATUS_OK).send(result)
-
   }
 
   public static searchByUserID = async (req: Request, res: Response) => {
@@ -118,14 +112,18 @@ export default class LdapServices {
       await mssql.close()
       await mssql.connect(userDB)
       item = await mssql.query(
-        `select (u.userid) as userid,
-        (u.fullname) as fullname, (u.email) as email,
-        (u.POSITION1) as position, d.FULLNAME as department
-      from PC_USERS as u
-      LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
-      where u.USERID = '${id}'
-      and u.REMOVED is null
-      and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+        `select top 1 (u.userid) as userid,
+          (u.fullname) as fullname
+		      ,(u.email) as email
+          ,(u.POSITION1) as position
+		      ,d.FULLNAME as subdepartment
+		      ,(d2.fullname) as department
+        from PC_USERS as u
+        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+		    LEFT OUTER JOIN PC_USERS d2 on d2.USERID = d.PARENTID
+        where u.USERID = '${id}'
+		    and u.REMOVED is null
+		    and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
       )
       await mssql.close()
     } catch (err) {
@@ -133,15 +131,6 @@ export default class LdapServices {
     }
     // IF all ok, Send Http code 200 respons
     res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    // const result = {
-    //   userid: 739,
-    //   fullname: 'นายปฐพี สิงหะ',
-    //   email: 'pattapee@ombudsman.go.th',
-    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
-    // }
-    // res.status(HTTPSTATUS_OK).send(result)
   }
 
   public static searchByUsername = async (req: Request, res: Response) => {
@@ -153,11 +142,15 @@ export default class LdapServices {
       await mssql.close()
       await mssql.connect(userDB)
       item = await mssql.query(
-        `select (u.userid) as userid,
-          (u.fullname) as fullname, (u.email) as email,
-          (u.POSITION1) as position, d.FULLNAME as department
+        `select top 1 (u.userid) as userid,
+          (u.fullname) as fullname
+		  ,(u.email) as email
+          ,(u.POSITION1) as position
+		  ,d.FULLNAME as subdepartment
+		  ,(d2.fullname) as department
         from PC_USERS as u
         LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+		LEFT OUTER JOIN PC_USERS d2 on d2.USERID = d.PARENTID
         where u.USERNAME = '${username}'
         and u.REMOVED is null
         and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
@@ -169,15 +162,6 @@ export default class LdapServices {
     }
     // IF all ok, Send Http code 200 respons
     res.status(HTTPSTATUS_OK).send(item.recordset[0])
-    // Coding in my home
-    // const result = {
-    //   userid: 739,
-    //   fullname: 'นายปฐพี สิงหะ',
-    //   email: 'pattapee@ombudsman.go.th',
-    //   position: 'นักวิชาการคอมพิวเตอร์ปฏิบัติการ',
-    //   department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร'
-    // }
-    // res.status(HTTPSTATUS_OK).send(result)
   }
 
 }

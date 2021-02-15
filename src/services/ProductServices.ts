@@ -74,14 +74,31 @@ export default class ProductServices {
     }
   };
 
-  public static getProductList = async (req: Request, res: Response) => {
-     if (repository === undefined) {
+  public static getCountByCategoryandstatus = async (req: Request, res: Response) => {
+    if (repository === undefined) {
       initialize();
     }
-     try {
-      const {datecheckageproduct, productstatus, producttype} = req.body
+    const {
+      category,
+      status,
+    } = req.body;
+    try {
+      const result = await repository.getCountByCategoryandstatus(category, status);
+      res.status(HTTPSTATUS_OK).send({ data: result });
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
+    }
+  }
+
+  public static getProductList = async (req: Request, res: Response) => {
+    if (repository === undefined) {
+      initialize();
+    }
+    try {
+      const { datecheckageproduct, productstatus, producttype } = req.body
       let products = []
-      if (productstatus <= 0 ) {
+      if (productstatus <= 0) {
         products = await repository.getAllByTypeID(producttype)
       } else {
         products = await repository.getAllByStatusAndType(productstatus, producttype)
