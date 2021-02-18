@@ -103,6 +103,36 @@ export default class LdapServices {
     res.status(HTTPSTATUS_OK).send(item.recordset[0])
   }
 
+  public static searchByFullnameExit = async (req: Request, res: Response) => {
+    const mssql = require('mssql')
+    let item = []
+    const { fullname } = req.body
+    // open connection db mssql and query get userid fullname email by fullname like 'req%'
+    try {
+      await mssql.close()
+      await mssql.connect(userDB)
+      item = await mssql.query(
+        `select top 1 (u.userid) as userid,
+          (u.fullname) as fullname
+		      ,(u.email) as email
+          ,(u.POSITION1) as position
+		     ,d.FULLNAME as subdepartment
+		      ,(d2.fullname) as department
+        from PC_USERS as u
+        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+		    LEFT OUTER JOIN PC_USERS d2 on d2.USERID = d.PARENTID
+        where u.FULLNAME like '%${fullname}%'
+        and u.REMOVED is null`
+      )
+      await mssql.close()
+    } catch (err) {
+      console.error(err)
+      res.status(HTTPSTATUS_BADREQUEST).send(err)
+    }
+    // IF all ok, Send Http code 200 respons
+    res.status(HTTPSTATUS_OK).send(item.recordset[0])
+  }
+
   public static searchByUserID = async (req: Request, res: Response) => {
     const mssql = require('mssql')
     let item = []

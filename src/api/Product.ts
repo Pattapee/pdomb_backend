@@ -11,5 +11,6 @@ routes.post('/update', Product.updateProduct)
 routes.delete('/del/:id', Product.deleteProduct)
 routes.post('/get/productlist', Product.getProductList)
 routes.post('/getCountByCategoryandstatus', Product.getCountByCategoryandstatus)
+routes.get('/dashboard', Product.getCountProductDashboard)
 
 export default routes

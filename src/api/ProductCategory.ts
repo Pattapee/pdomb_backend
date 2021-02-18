@@ -8,6 +8,5 @@ routes.get('/get/:id', ProductCategory.getOneProductCategoryByID)
 routes.post('/add', ProductCategory.saveProductCategory)
 routes.post('/update', ProductCategory.updateProductCategory)
 routes.get('/del/:id', ProductCategory.deleteProductCategory)
-routes.get('/count', ProductCategory.getCountCategory)
 
 export default routes

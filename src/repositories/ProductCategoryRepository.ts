@@ -18,6 +18,15 @@ export class ProductCategoryRepository extends Repository<ProductCategory> {
     return result
   }
 
+  public async getAlllimit(id: number, count: number): Promise<ProductCategory[]> {
+    const result = await this.find({
+      where: { id },
+      order: { id: 'DESC' },
+      take: count
+    })
+    return result
+  }
+
   // fn getOne ProductCategory by id
   public async getOneByID(id: number): Promise<ProductCategory[]> {
     const result = await this.find({
@@ -37,10 +46,6 @@ export class ProductCategoryRepository extends Repository<ProductCategory> {
   public async Update(id: number, productcategory: ProductCategory): Promise<ProductCategory> {
     await this.manager.update(ProductCategory, id, productcategory)
     return productcategory
-  }
-
-  public async Count(): Promise<[ProductCategory[], number]> {
-    return await this.findAndCount()
   }
 
 }

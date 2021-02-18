@@ -20,6 +20,7 @@ const initialize = () => {
 };
 
 export default class ProductStatusService {
+
   public static getAllProductStatus = async (req: Request, res: Response) => {
     if (repository === undefined) {
       initialize();

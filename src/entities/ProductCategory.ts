@@ -15,6 +15,7 @@ export class ProductCategory {
 
   @OneToMany((type) => ProductCategory, (productcategory) => productcategory.producttype)
   public producttype: ProductCategory[]
+
 }
 
 export default ProductCategory

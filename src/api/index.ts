@@ -15,5 +15,6 @@ routes.post('/user/decoaduser', ldapservice.decoadUser)
 routes.post('/user/searchByFullname', ldapservice.searchByFullname)
 routes.post('/user/searchByUserID', ldapservice.searchByUserID)
 routes.post('/user/searchByUsername', ldapservice.searchByUsername)
+routes.post('/user/searchByFullnameExit', ldapservice.searchByFullnameExit)
 
 export default routes

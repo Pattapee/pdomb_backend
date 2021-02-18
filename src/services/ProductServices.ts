@@ -1,8 +1,7 @@
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import * as _ from 'lodash';
-import { identity } from 'lodash';
 import moment from 'moment'
-import { EntityRepository, getConnection } from 'typeorm';
+import { getConnection } from 'typeorm';
 import {
   HTTPSTATUS_ACCEPT,
   HTTPSTATUS_BADREQUEST,
@@ -12,12 +11,20 @@ import {
   HTTPSTATUS_OK,
 } from '../constants/HttpStatus';
 import { Product } from '../entities/Product';
+import { ProductStatus } from '../entities/ProductStatus';
+import { ProductCategoryRepository } from '../repositories/ProductCategoryRepository';
 import { ProductRepository } from '../repositories/ProductRepository';
+import { ProductStatusRepository } from '../repositories/ProductStatusRepository';
 
 let repository: ProductRepository;
+let repositorystatus: ProductStatusRepository;
+let repositorycategory: ProductCategoryRepository;
 const initialize = () => {
   const connection = getConnection();
   repository = connection.getCustomRepository(ProductRepository);
+  repositorystatus = connection.getCustomRepository(ProductStatusRepository)
+  repositorycategory = connection.getCustomRepository(ProductCategoryRepository)
+
 };
 
 export default class ProductServices {
@@ -84,7 +91,7 @@ export default class ProductServices {
     } = req.body;
     try {
       const result = await repository.getCountByCategoryandstatus(category, status);
-      res.status(HTTPSTATUS_OK).send({ data: result });
+      res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Product !!!' });
@@ -262,4 +269,35 @@ export default class ProductServices {
       res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find Product !!!' });
     }
   };
+
+  public static getCountProductDashboard = async (req: Request, res: Response) => {
+    if (repositorycategory === undefined && repositorystatus === undefined) {
+      initialize();
+    }
+    try {
+      const categorys = await repositorycategory.getAll();
+
+      const result = await Promise.all(_.map(categorys, async (value1) => {
+        const status = await repositorystatus.getAll()
+        const statusNew = await Promise.all(_.map(status, async (value2) => {
+          return {
+            status: value2.status,
+            id: value2.id,
+            count: await repository.getCountByCategoryandstatus(value1.id, value2.id)
+          }
+        }))
+        const productlated5 = await repository.getAlllimit(value1.id, 10)
+        return {
+          category: value1.category,
+          id: value1.id,
+          status: statusNew,
+          productCategory5: productlated5
+        }
+      }))
+      res.status(HTTPSTATUS_OK).send(result);
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find Dashboard !!!' });
+    }
+  }
 }

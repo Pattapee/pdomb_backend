@@ -11,6 +11,8 @@ import {
 } from '../constants/HttpStatus';
 import { ProductCategory } from '../entities/ProductCategory';
 import { ProductCategoryRepository } from '../repositories/ProductCategoryRepository';
+import { ProductRepository } from '../repositories/ProductRepository';
+import { ProductStatusRepository } from '../repositories/ProductStatusRepository';
 
 let repository: ProductCategoryRepository;
 const initialize = () => {
@@ -47,19 +49,6 @@ export default class ProductCategoryService {
       res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
     }
   };
-
-  public static getCountCategory = async (req: Request,    res: Response  ) => {
-    if (repository === undefined) {
-      initialize();
-    }
-    try {
-      const result = await repository.Count();
-      res.status(HTTPSTATUS_OK).send(result);
-    } catch (e) {
-      console.error(e);
-      res.status(HTTPSTATUS_BADREQUEST).send({ data: 'Invalid find ProductCategory !!!' });
-    }
-  }
 
   public static saveProductCategory = async (req: Request, res: Response) => {
     if (repository === undefined) {

@@ -1,6 +1,5 @@
 import { EntityRepository, getConnection, MoreThanOrEqual, Repository } from 'typeorm'
 import Product from '../entities/Product'
-import ProductCategory from '../entities/ProductCategory'
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
@@ -74,32 +73,27 @@ export class ProductRepository extends Repository<Product> {
   }
 
   // fn Count Dashboard
-  public async getCountByCategoryandstatus(productcategory: ProductCategory, status: number): Promise<Product[]> {
-    // const result = await getConnection().createQueryBuilder()
-    //   .select('id')
-    //   .from(Product, 'prod')
-    //   .where('producttype.productcategory.id = :id', { id: 2 })
-    const result = await this.find({
-      // productstatus: { id: status },
-      where: { producttype: { productcategory: { id: 2 } } }
-      , relations: ['producttype']
-      // productcategorys: { id: 2 }
-      // producttype: { id: 59 }
-    })
-    // const users = await this.createQueryBuilder()
-    //   .select()
-    //   .from(User, 'user')
-    //   .where('user.name = :name', { name: 'John' })
-    //   .getMany();
+  public async getCountByCategoryandstatus(category: number, status: number): Promise<number> {
+    const query = `select COUNT(p.id) as countProduct
+    from product p
+    left outer join product_type pt on pt.id = p.producttypeId
+    where p.productstatusId = ${status}
+    and pt.productcategorysId = ${category}`;
+    const result = await getConnection().query(query)
+    return result[0].countProduct
+  }
 
-    // const result = await db.entityManager.query('select id, email, name from users where id=:PARAMID, [1]')
-    // SELECT * FROM`product` p
-    // left outer join product_type pt on pt.id = p.`producttypeId`
-    // left outer join product_category pc on pc.id = pt.productcategorysId
-    // where pc.id = 2 and p.`productstatusId` = 1
-
-    // console.log(result)
+  public async getAlllimit(id: number, count: number): Promise<Product[]> {
+    const query = `
+    select p.code ,p.name, p.ownername, p.ownerdepartment, p.atarea
+    from product p
+    JOIN product_type pt on pt.id = p.producttypeId
+    where pt.productcategorysId = ${id}
+    order by p.updated desc
+    limit ${count}`
+    const result = await getConnection().query(query)
     return result
   }
+
 }
 export default ProductRepository
