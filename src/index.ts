@@ -9,6 +9,7 @@ import cron from 'node-cron';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import routes from './api';
+import itemStatusService from './services/ItemStatusServices'
 import ProductStatusService from './services/ProductStatusServices'
 
 createConnection().then(async (connection) => {
@@ -31,4 +32,5 @@ createConnection().then(async (connection) => {
   });
   // Recheck and initalData
   await ProductStatusService.IninitalData();
+  await itemStatusService.IninitalData();
 });

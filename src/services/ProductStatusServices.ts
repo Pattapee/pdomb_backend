@@ -123,6 +123,10 @@ export default class ProductStatusService {
             id: 4,
             status: 'อื่นๆ',
           },
+          {
+            id: 5,
+            status: 'สำรอง',
+          },
         ];
         forEach(data, async (value) => {
           const newData = new ProductStatus();
