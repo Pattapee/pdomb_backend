@@ -20,9 +20,7 @@ const initialize = () => {
 
 export default class ItemCategoryService {
   public static getAllItemCategory = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -36,9 +34,7 @@ export default class ItemCategoryService {
     req: Request,
     res: Response
   ) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -49,9 +45,7 @@ export default class ItemCategoryService {
   };
 
   public static saveItemCategory = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { category } = req.body;
     const data = new ItemCategory();
     data.category = category;
@@ -67,9 +61,7 @@ export default class ItemCategoryService {
   };
 
   public static updateItemCategory = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { category, id } = req.body;
     const newData = new ItemCategory();
     newData.category = category;
@@ -84,9 +76,7 @@ export default class ItemCategoryService {
     }
   };
   public static deleteItemCategory = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const data = await repository.getOneByID(+req.params.id);
       const result = await repository.Delete(_.last(data));

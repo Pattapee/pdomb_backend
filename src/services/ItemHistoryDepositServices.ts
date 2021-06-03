@@ -21,9 +21,7 @@ const initialize = () => {
 export default class ItemHistoryDepositServices {
 
   public static getAllItemHistoryDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     try {
       const result = await repository.getAll()
       res.status(HTTPSTATUS_OK).send(result)
@@ -34,9 +32,7 @@ export default class ItemHistoryDepositServices {
   }
 
   public static DelItemHistoryDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     try {
       const { itemhistoryDeposit } = req.body
       const result = await repository.Delete(itemhistoryDeposit)
@@ -48,9 +44,7 @@ export default class ItemHistoryDepositServices {
 
   }
   public static getAllByIDItem = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     try {
       const result = await repository.getAllbyIditem(+req.params.id)
       res.status(HTTPSTATUS_OK).send(result)
@@ -61,9 +55,7 @@ export default class ItemHistoryDepositServices {
   }
 
   public static SaveData = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     const {
       item,
       balance,
@@ -95,9 +87,7 @@ export default class ItemHistoryDepositServices {
   }
 
   public static updateData = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     const {
       item,
       balance,

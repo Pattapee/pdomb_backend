@@ -40,6 +40,7 @@
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "helmet": "^3.21.2",
+    "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
     "ldapts": "^1.10.0",
     "lokijs": "^1.5.10",

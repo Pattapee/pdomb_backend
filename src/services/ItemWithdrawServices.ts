@@ -20,9 +20,7 @@ const initialize = () => {
 
 export default class ItemWithdrawService {
   public static getAllItemWithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -33,9 +31,7 @@ export default class ItemWithdrawService {
   };
 
   public static getOneItemWithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -46,9 +42,7 @@ export default class ItemWithdrawService {
   };
 
   public static saveitemWithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       remark,
       no,
@@ -86,9 +80,7 @@ export default class ItemWithdrawService {
   };
 
   public static updateItemWithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       remark,
       no,
@@ -129,9 +121,7 @@ export default class ItemWithdrawService {
   };
 
   public static delItemWithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.Delete(req.body);
       res.status(HTTPSTATUS_OK).send(result);

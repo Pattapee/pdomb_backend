@@ -21,9 +21,7 @@ const initialize = () => {
 
 export default class ItemStatusService {
   public static getAllItemStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -34,9 +32,7 @@ export default class ItemStatusService {
   };
 
   public static getOneItemStatusByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -47,9 +43,7 @@ export default class ItemStatusService {
   };
 
   public static saveItemStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { status } = req.body;
     const data = new ItemStatus();
     data.status = status;
@@ -65,9 +59,7 @@ export default class ItemStatusService {
   };
 
   public static updateItemStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { status, id } = req.body;
     const newData = new ItemStatus();
     newData.status = status;
@@ -83,9 +75,7 @@ export default class ItemStatusService {
   };
 
   public static IninitalData = async () => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       if (result.length === 0) {

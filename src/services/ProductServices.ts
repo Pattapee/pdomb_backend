@@ -30,9 +30,7 @@ const initialize = () => {
 export default class ProductServices {
 
   public static getAllProduct = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -43,9 +41,7 @@ export default class ProductServices {
   };
 
   public static getAllByproductTypes = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAllByTypeID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -56,9 +52,7 @@ export default class ProductServices {
   };
 
   public static getAllByproductStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAllByStatusID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -69,9 +63,7 @@ export default class ProductServices {
   };
 
   public static getOneProductByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -82,9 +74,7 @@ export default class ProductServices {
   };
 
   public static getCountByCategoryandstatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       category,
       status,
@@ -99,9 +89,7 @@ export default class ProductServices {
   }
 
   public static getProductList = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const { datecheckageproduct, productstatus, producttype } = req.body
       let products = []
@@ -124,9 +112,7 @@ export default class ProductServices {
   }
 
   public static SaveProduct = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       code,
       datereceived,
@@ -188,9 +174,7 @@ export default class ProductServices {
   };
 
   public static updateProduct = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       code,
       datereceived,
@@ -255,9 +239,7 @@ export default class ProductServices {
   };
 
   public static deleteProduct = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const data = await repository.getOneByID(+req.params.id);
       const result = await repository.Delete(_.last(data));

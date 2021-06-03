@@ -20,9 +20,7 @@ const initialize = () => {
 
 export default class ItemService {
   public static getAllItemDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -33,9 +31,7 @@ export default class ItemService {
   };
 
   public static getAllItemDepositlimit50 = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -46,9 +42,7 @@ export default class ItemService {
   };
 
   public static delDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize()
-    }
+    initialize();
     try {
       const result = await repository.Delete(req.body)
       res.status(HTTPSTATUS_OK).send(result)
@@ -59,9 +53,7 @@ export default class ItemService {
   };
 
   public static getOneByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -72,9 +64,7 @@ export default class ItemService {
   };
 
   public static SaveItemDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       amount,
       item,
@@ -103,9 +93,7 @@ export default class ItemService {
   };
 
   public static updateItemDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       amount,
       item,
@@ -136,9 +124,7 @@ export default class ItemService {
   };
 
   public static delItemDeposit = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.Delete(req.body);
       res.status(HTTPSTATUS_OK).send(result);

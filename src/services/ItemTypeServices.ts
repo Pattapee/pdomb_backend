@@ -20,9 +20,7 @@ const initialize = () => {
 
 export default class ItemTypeService {
   public static getAllItemType = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -33,9 +31,7 @@ export default class ItemTypeService {
   };
 
   public static getOneItemTypeByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -46,9 +42,7 @@ export default class ItemTypeService {
   };
 
   public static getAllByCategoryID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAllByCategoryID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -59,9 +53,7 @@ export default class ItemTypeService {
   };
 
   public static saveItemType = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { type, itemcategorys } = req.body;
     const data = new ItemType();
     data.type = type;
@@ -78,9 +70,7 @@ export default class ItemTypeService {
   };
 
   public static updateItemType = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { type, id, itemcategorys } = req.body;
     const newData = new ItemType();
     newData.type = type;
@@ -97,9 +87,7 @@ export default class ItemTypeService {
   };
 
   public static deleteItemType = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const data = await repository.getOneByID(+req.params.id);
       const result = await repository.Delete(_.last(data));

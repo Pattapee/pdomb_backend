@@ -23,9 +23,7 @@ export default class ItemWithdrawService {
     req: Request,
     res: Response
   ) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -39,9 +37,7 @@ export default class ItemWithdrawService {
     req: Request,
     res: Response
   ) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -52,9 +48,7 @@ export default class ItemWithdrawService {
   };
 
   public static getAllByitemwithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAllByItemwithdraw(req.body);
       res.status(HTTPSTATUS_OK).send(result);
@@ -68,9 +62,7 @@ export default class ItemWithdrawService {
     req: Request,
     res: Response
   ) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { amount, item, itemWithdraw } = req.body;
     const data = new ItemWithdrawDetail();
     data.amount = amount;
@@ -88,9 +80,7 @@ export default class ItemWithdrawService {
   };
 
   public static updateItemWithdrawDetail = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { amount, item, itemWithdraw, id, activeStatus } = req.body;
     const newData = new ItemWithdrawDetail();
     newData.amount = amount;

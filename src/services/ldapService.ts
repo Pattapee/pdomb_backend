@@ -17,35 +17,52 @@ export default class LdapServices {
 
   public static userAuthen = async (req: Request, res: Response) => {
     const mssql = require('mssql')
-    let user = []
+    const user = []
     const { username, password } = req.body
-    let result = { data: { fullnamethai: '', userid: '' } }
+    const result = {
+      data: {
+        fullname: 'Pattapee Singha',
+        displayname: 'Pattapee Singha',
+        description: 'นักวิชาการคอมพิวเตอร์ปฎิบัติการ',
+        mail: 'Pattapee@ombudsman.go.th',
+        mobile: '0829533091',
+        title: 'นักวิชาการคอมพิวเตอร์ปฎิบัติการ',
+        department: 'สำนักเทคโนโลยีสารสนเทศและการสื่อสาร',
+        company: 'สำนักงานผู้ตรวจการแผ่นดิน',
+        officeName: 'ส่วนพัฒนาระบบสารสนเทศ',
+        ipphone: '19161',
+        fullnamethai: '',
+        userid: 0
+      }
+    }
     try {
-      result = await axios({
-        method: 'post',
-        url: 'http://192.168.2.18/ldap/authenuser.php',
-        data: qs.stringify({
-          username,
-          password
-        }),
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-        }
-      })
+      // result = await axios({
+      //   method: 'post',
+      //   url: 'http://192.168.2.18/ldap/authenuser.php',
+      //   data: qs.stringify({
+      //     username,
+      //     password
+      //   }),
+      //   headers: {
+      //     'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      //   }
+      // })
       if (typeof result.data === 'object' && result.data !== null) {
-        await mssql.connect(userDB)
-        user = await mssql.query(
-          `select top 1(u.userid) as userid,
-        (u.fullname) as fullname
-        from PC_USERS as u
-        LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
-        where u.username = '${username}'
-        and u.REMOVED is null
-        and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
-        )
-        await mssql.close()
-        result.data.fullnamethai = user.recordset[0].fullname
-        result.data.userid = user.recordset[0].userid
+        // await mssql.connect(userDB)
+        // user = await mssql.query(
+        //   `select top 1(u.userid) as userid,
+        // (u.fullname) as fullname
+        // from PC_USERS as u
+        // LEFT OUTER JOIN PC_USERS d on d.USERID = u.PARENTID
+        // where u.username = '${username}'
+        // and u.REMOVED is null
+        // and d.FULLNAME != 'เจ้าหน้าที่ลาออก/เกษียณ'`
+        // )
+        // await mssql.close()
+        // result.data.fullnamethai = user.recordset[0].fullname
+        // result.data.userid = user.recordset[0].userid
+        result.data.fullnamethai = 'นายปฐพี  สิงหะ'
+        result.data.userid = 739
         const token = await jwt.sign({
           data: result.data
         }, process.env.signtoken, { expiresIn: '3h' });

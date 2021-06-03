@@ -22,9 +22,7 @@ const initialize = () => {
 export default class ProductStatusService {
 
   public static getAllProductStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -35,9 +33,7 @@ export default class ProductStatusService {
   };
 
   public static getOneProductStatusByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -48,9 +44,7 @@ export default class ProductStatusService {
   };
 
   public static saveProductStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { status } = req.body;
     const data = new ProductStatus();
     data.status = status;
@@ -66,9 +60,7 @@ export default class ProductStatusService {
   };
 
   public static updateProductStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const { status, id } = req.body;
     const newData = new ProductStatus();
     newData.status = status;
@@ -84,9 +76,7 @@ export default class ProductStatusService {
   };
 
   public static deleteProductStatus = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const data = await repository.getOneByID(+req.params.id);
       const result = await repository.Delete(_.last(data));
@@ -100,9 +90,7 @@ export default class ProductStatusService {
   };
 
   public static IninitalData = async () => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       if (result.length === 0) {

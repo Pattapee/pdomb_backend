@@ -20,9 +20,7 @@ const initialize = () => {
 
 export default class ItemService {
   public static getAllItem = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAll();
       res.status(HTTPSTATUS_OK).send(result);
@@ -33,9 +31,7 @@ export default class ItemService {
   };
 
   public static getItemforwithdraw = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getItemforwithdraw();
       res.status(HTTPSTATUS_OK).send(result);
@@ -46,9 +42,7 @@ export default class ItemService {
   };
 
   public static getAllByitemTypes = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getAllByitemTypes(req.body);
       res.status(HTTPSTATUS_OK).send(result);
@@ -59,9 +53,7 @@ export default class ItemService {
   };
 
   public static getOneItemByID = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     try {
       const result = await repository.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
@@ -72,9 +64,7 @@ export default class ItemService {
   };
 
   public static getOneBycodename = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       codename,
     } = req.body;
@@ -88,9 +78,7 @@ export default class ItemService {
   };
 
   public static SaveItem = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       uuid,
       itemname,
@@ -126,9 +114,7 @@ export default class ItemService {
   };
 
   public static updateItem = async (req: Request, res: Response) => {
-    if (repository === undefined) {
-      initialize();
-    }
+    initialize();
     const {
       itemname,
       uuid,
@@ -165,4 +151,5 @@ export default class ItemService {
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' });
     }
   };
+
 }
