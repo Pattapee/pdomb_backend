@@ -152,4 +152,16 @@ export default class ItemService {
     }
   };
 
+  public static DeleteItem = async (req: Request, res: Response) => {
+    initialize();
+    const item = req.body;
+    try {
+      const result = await repository.Delete(item);
+      res.status(HTTPSTATUS_OK).send(result);
+    } catch (e) {
+      console.error(e);
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' });
+    }
+  };
+
 }

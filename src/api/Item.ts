@@ -11,6 +11,7 @@ routes.get('/get/:id', Item.getOneItemByID)
 routes.post('/add', Item.SaveItem)
 routes.put('/update', Item.updateItem)
 routes.post('/getbyitemtype', Item.getAllByitemTypes)
+routes.post('/delete', Item.DeleteItem)
 // itemHistoryWithdraw
 routes.get('/history/get', ItemHistoryWithdraw.getAllItemHistoryWithdraw)
 routes.get('/history/getbyitem/:id', ItemHistoryWithdraw.getAllByIDItem)
