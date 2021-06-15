@@ -9,7 +9,7 @@ export class ItemDepositDetail {
   @Column()
   public amount: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0, })
   public price: number;
 
   @Column({ readonly: true })

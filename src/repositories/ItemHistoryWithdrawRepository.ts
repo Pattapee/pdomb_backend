@@ -14,7 +14,7 @@ export class ItemHistoryWithdrawRepository extends Repository<ItemHistoryWithdra
   public async getAll(): Promise<ItemHistoryWithdraw[]> {
     const result = await this.find({
       order: { updated: 'DESC' },
-      relations: ['item']
+      relations: ['item', 'itemWithdraw']
 
     })
     return result
@@ -28,8 +28,7 @@ export class ItemHistoryWithdrawRepository extends Repository<ItemHistoryWithdra
           id
         }
       },
-      relations: ['item']
-
+      relations: ['item', 'itemWithdraw']
     })
     return result
   }

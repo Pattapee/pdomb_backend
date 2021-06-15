@@ -10,7 +10,7 @@ export class ItemDeposit {
   @Column()
   public company: string = '';
 
-  @Column()
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0, })
   public nettotal: number = 0
 
   @Column({ readonly: true })
@@ -21,6 +21,9 @@ export class ItemDeposit {
 
   @Column()
   public datereceived: Date;
+
+  @Column()
+  public remark: string = '';
 
   @Column()
   public updated: Date;

@@ -66,14 +66,12 @@ export default class ItemService {
   public static SaveItemDeposit = async (req: Request, res: Response) => {
     initialize();
     const {
-      amount,
-      item,
       dateimport,
       datereceived,
       no,
-      price,
       company,
       nettotal,
+      remark
     } = req.body;
     const data = new ItemDeposit();
     data.dateimport = dateimport;
@@ -81,6 +79,7 @@ export default class ItemService {
     data.no = no;
     data.company = company;
     data.nettotal = nettotal;
+    data.remark = remark;
     try {
       data.created = new Date();
       data.updated = new Date();
@@ -95,16 +94,16 @@ export default class ItemService {
   public static updateItemDeposit = async (req: Request, res: Response) => {
     initialize();
     const {
-      amount,
-      item,
       id,
       dateimport,
       no,
       datereceived,
       company,
       nettotal,
-      activeStatus
+      activeStatus,
+      remark
     } = req.body;
+    console.log(req.body)
     const newData = new ItemDeposit();
     newData.id = id;
     newData.dateimport = dateimport;
@@ -113,6 +112,8 @@ export default class ItemService {
     newData.company = company;
     newData.nettotal = nettotal;
     newData.activeStatus = activeStatus;
+    newData.remark = remark
+    console.log(newData)
     try {
       newData.updated = new Date();
       const result = await repository.Update(newData.id, newData);
