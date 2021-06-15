@@ -10,12 +10,18 @@ import {
   HTTPSTATUS_OK,
 } from '../constants/HttpStatus';
 import { ItemDeposit } from '../entities/ItemDeposit';
+import { ItemDepositDetailRepository } from '../repositories/ItemDepositDetailRepository'
 import { ItemDepositRepository } from '../repositories/ItemDepositRepository';
 
 let repository: ItemDepositRepository;
 const initialize = () => {
   const connection = getConnection();
   repository = connection.getCustomRepository(ItemDepositRepository);
+};
+let repositoryItemDepositDetail: ItemDepositDetailRepository;
+const initialize2 = () => {
+  const connection = getConnection();
+  repositoryItemDepositDetail = connection.getCustomRepository(ItemDepositDetailRepository);
 };
 
 export default class ItemService {
@@ -103,7 +109,6 @@ export default class ItemService {
       activeStatus,
       remark
     } = req.body;
-    console.log(req.body)
     const newData = new ItemDeposit();
     newData.id = id;
     newData.dateimport = dateimport;
@@ -113,7 +118,6 @@ export default class ItemService {
     newData.nettotal = nettotal;
     newData.activeStatus = activeStatus;
     newData.remark = remark
-    console.log(newData)
     try {
       newData.updated = new Date();
       const result = await repository.Update(newData.id, newData);
@@ -126,6 +130,10 @@ export default class ItemService {
 
   public static delItemDeposit = async (req: Request, res: Response) => {
     initialize();
+    initialize2();
+    console.log(req.body)
+    const ans = await repositoryItemDepositDetail.getAllByItemdeposit(req.body)
+    console.log(ans)
     try {
       const result = await repository.Delete(req.body);
       res.status(HTTPSTATUS_OK).send(result);
