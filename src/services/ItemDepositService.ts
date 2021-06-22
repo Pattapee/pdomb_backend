@@ -1,3 +1,4 @@
+import { defaultMaxListeners } from 'events';
 import { Request, Response } from 'express';
 import * as _ from 'lodash';
 import { getConnection } from 'typeorm';
@@ -12,23 +13,30 @@ import {
 import { ItemDeposit } from '../entities/ItemDeposit';
 import { ItemDepositDetailRepository } from '../repositories/ItemDepositDetailRepository'
 import { ItemDepositRepository } from '../repositories/ItemDepositRepository';
+import { ItemRepository } from '../repositories/ItemRepository'
 
-let repository: ItemDepositRepository;
-const initialize = () => {
+let repositoryDeposit: ItemDepositRepository;
+const initializeDeposi = () => {
   const connection = getConnection();
-  repository = connection.getCustomRepository(ItemDepositRepository);
+  repositoryDeposit = connection.getCustomRepository(ItemDepositRepository);
 };
-let repositoryItemDepositDetail: ItemDepositDetailRepository;
-const initialize2 = () => {
+let repositoryDepositDetail: ItemDepositDetailRepository;
+const initializeDepositDetail = () => {
   const connection = getConnection();
-  repositoryItemDepositDetail = connection.getCustomRepository(ItemDepositDetailRepository);
+  repositoryDepositDetail = connection.getCustomRepository(ItemDepositDetailRepository);
+};
+
+let repositoryItem: ItemRepository;
+const initializeitem = () => {
+  const connection = getConnection();
+  repositoryItem = connection.getCustomRepository(ItemRepository);
 };
 
 export default class ItemService {
   public static getAllItemDeposit = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     try {
-      const result = await repository.getAll();
+      const result = await repositoryDeposit.getAll();
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -37,9 +45,9 @@ export default class ItemService {
   };
 
   public static getAllItemDepositlimit50 = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     try {
-      const result = await repository.getAll();
+      const result = await repositoryDeposit.getAll();
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -48,9 +56,9 @@ export default class ItemService {
   };
 
   public static delDeposit = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     try {
-      const result = await repository.Delete(req.body)
+      const result = await repositoryDeposit.Delete(req.body)
       res.status(HTTPSTATUS_OK).send(result)
     } catch (e) {
       console.error(e)
@@ -59,9 +67,9 @@ export default class ItemService {
   };
 
   public static getOneByID = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     try {
-      const result = await repository.getOneByID(+req.params.id);
+      const result = await repositoryDeposit.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -70,7 +78,7 @@ export default class ItemService {
   };
 
   public static SaveItemDeposit = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     const {
       dateimport,
       datereceived,
@@ -89,7 +97,7 @@ export default class ItemService {
     try {
       data.created = new Date();
       data.updated = new Date();
-      const result = await repository.Save(data);
+      const result = await repositoryDeposit.Save(data);
       res.status(HTTPSTATUS_CREATE).send(result);
     } catch (e) {
       console.error(e);
@@ -98,7 +106,7 @@ export default class ItemService {
   };
 
   public static updateItemDeposit = async (req: Request, res: Response) => {
-    initialize();
+    initializeDeposi();
     const {
       id,
       dateimport,
@@ -120,7 +128,7 @@ export default class ItemService {
     newData.remark = remark
     try {
       newData.updated = new Date();
-      const result = await repository.Update(newData.id, newData);
+      const result = await repositoryDeposit.Update(newData.id, newData);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -129,14 +137,20 @@ export default class ItemService {
   };
 
   public static delItemDeposit = async (req: Request, res: Response) => {
-    initialize();
-    initialize2();
-    console.log(req.body)
-    const ans = await repositoryItemDepositDetail.getAllByItemdeposit(req.body)
-    console.log(ans)
+    initializeDeposi();
+    initializeDepositDetail();
+    initializeitem();
+    const detail = await repositoryDepositDetail.getAllByItemdeposit(req.body)
+    detail.forEach(async (value) => {
+      const item = (await repositoryItem.getOneByID(value.id))[0]
+      console.log(item)
+      // item.balance = (+item.balance - +value.amount)
+      // await repositoryItem.Update(item.id, item)
+    })
+
     try {
-      const result = await repository.Delete(req.body);
-      res.status(HTTPSTATUS_OK).send(result);
+      // const result = await repositoryDeposit.Delete(req.body);
+      res.status(HTTPSTATUS_OK).send(true);
     } catch (e) {
       console.error(e);
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' });
