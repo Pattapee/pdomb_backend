@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm'
+import { EntityRepository, MoreThanOrEqual, Repository } from 'typeorm'
 import { ItemHistoryDeposit } from '../entities/ItemHistoryDeposit';
 
 @EntityRepository(ItemHistoryDeposit)
@@ -14,8 +14,20 @@ export class ItemHistoryDepositRepository extends Repository<ItemHistoryDeposit>
   public async getAll(): Promise<ItemHistoryDeposit[]> {
     const result = await this.find({
       order: { updated: 'DESC' },
-      relations: ['item', 'itemDeposit']
+      relations: ['itemDeposit']
 
+    })
+    return result
+  }
+
+  // fn getAllbyamountbalance for change amount
+  public async getAllbyamountbalance(item: any): Promise<ItemHistoryDeposit[]> {
+    const result = await this.find({
+      where: {
+        item,
+        amountbalance: MoreThanOrEqual(1),
+      },
+      order: { created: 'ASC' },
     })
     return result
   }
@@ -24,12 +36,9 @@ export class ItemHistoryDepositRepository extends Repository<ItemHistoryDeposit>
   public async getAllbyIditem(id: number): Promise<ItemHistoryDeposit[]> {
     const result = await this.find({
       where: {
-        item: {
-          id
-        }
+        item: { id }
       },
-      relations: ['item', 'itemDeposit']
-
+      relations: ['itemDeposit']
     })
     return result
   }

@@ -12,17 +12,17 @@ import {
 import { ItemWithdraw } from '../entities/ItemWithdraw';
 import { ItemWithdrawRepository } from '../repositories/ItemWithdrawRepository';
 
-let repository: ItemWithdrawRepository;
-const initialize = () => {
+let repositoryIWR: ItemWithdrawRepository;
+const initializeIWR = () => {
   const connection = getConnection();
-  repository = connection.getCustomRepository(ItemWithdrawRepository);
+  repositoryIWR = connection.getCustomRepository(ItemWithdrawRepository);
 };
 
 export default class ItemWithdrawService {
   public static getAllItemWithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWR();
     try {
-      const result = await repository.getAll();
+      const result = await repositoryIWR.getAll();
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -31,9 +31,9 @@ export default class ItemWithdrawService {
   };
 
   public static getOneItemWithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWR();
     try {
-      const result = await repository.getOneByID(+req.params.id);
+      const result = await repositoryIWR.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -42,7 +42,7 @@ export default class ItemWithdrawService {
   };
 
   public static saveitemWithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWR();
     const {
       remark,
       no,
@@ -71,7 +71,7 @@ export default class ItemWithdrawService {
     try {
       data.created = new Date();
       data.updated = new Date();
-      const result = await repository.Save(data);
+      const result = await repositoryIWR.Save(data);
       res.status(HTTPSTATUS_CREATE).send(result);
     } catch (e) {
       console.error(e);
@@ -80,7 +80,7 @@ export default class ItemWithdrawService {
   };
 
   public static updateItemWithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWR();
     const {
       remark,
       no,
@@ -112,7 +112,7 @@ export default class ItemWithdrawService {
     newData.approved2 = approved2
     try {
       newData.updated = new Date();
-      const result = await repository.Update(newData.id, newData);
+      const result = await repositoryIWR.Update(newData.id, newData);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -121,9 +121,9 @@ export default class ItemWithdrawService {
   };
 
   public static delItemWithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWR();
     try {
-      const result = await repository.Delete(req.body);
+      const result = await repositoryIWR.Delete(req.body);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);

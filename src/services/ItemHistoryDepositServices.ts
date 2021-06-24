@@ -47,7 +47,8 @@ export default class ItemHistoryDepositServices {
     initialize();
     try {
       const result = await repository.getAllbyIditem(+req.params.id)
-      res.status(HTTPSTATUS_OK).send(result)
+      const data = await _.orderBy(result, [(obj) => new Date(obj.created)], ['desc'])
+      res.status(HTTPSTATUS_OK).send(data)
     } catch (e) {
       console.error(e)
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' })
@@ -64,11 +65,13 @@ export default class ItemHistoryDepositServices {
       company,
       datereceived,
       dateimport,
-      itemDeposit
+      itemDeposit,
+      amountbalance
     } = req.body
     const data = new ItemHistoryDeposit()
     data.item = item
     data.balance = balance
+    data.amountbalance = amountbalance
     data.amount = amount
     data.price = price
     data.company = company
@@ -97,12 +100,14 @@ export default class ItemHistoryDepositServices {
       company,
       id,
       dateimport,
-      itemDeposit
+      itemDeposit,
+      amountbalance
     } = req.body
     const newData = new ItemHistoryDeposit()
     newData.item = item
     newData.balance = balance
     newData.amount = amount
+    newData.amountbalance = amountbalance
     newData.price = price
     newData.company = company
     newData.datereceived = datereceived

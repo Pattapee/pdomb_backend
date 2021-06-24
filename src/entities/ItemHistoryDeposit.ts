@@ -20,6 +20,9 @@ export class ItemHistoryDeposit {
   public balance: number
 
   @Column()
+  public amountbalance: number;
+
+  @Column()
   public company: string
 
   @Column()

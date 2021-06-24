@@ -15,7 +15,6 @@ export class ItemHistoryWithdrawRepository extends Repository<ItemHistoryWithdra
     const result = await this.find({
       order: { updated: 'DESC' },
       relations: ['item', 'itemWithdraw']
-
     })
     return result
   }
@@ -24,9 +23,7 @@ export class ItemHistoryWithdrawRepository extends Repository<ItemHistoryWithdra
   public async getAllbyIditem(id: number): Promise<ItemHistoryWithdraw[]> {
     const result = await this.find({
       where: {
-        item: {
-          id
-        }
+        item: { id }
       },
       relations: ['item', 'itemWithdraw']
     })

@@ -54,10 +54,9 @@ export default class ItemWithdrawService {
 
   public static saveitemDepositDetail = async (req: Request, res: Response) => {
     initialize();
-    const { amount, item, price, itemDeposit, amountbalance } = req.body;
+    const { amount, item, price, itemDeposit } = req.body;
     const data = new ItemDepositDetail();
     data.amount = amount;
-    data.amountbalance = amountbalance;
     data.price = price;
     data.item = item;
     data.itemDeposit = itemDeposit
@@ -74,10 +73,9 @@ export default class ItemWithdrawService {
 
   public static updateitemDepositDetail = async (req: Request, res: Response) => {
     initialize();
-    const { amount, item, itemDeposit, id, price, activeStatus, amountbalance } = req.body;
+    const { amount, item, itemDeposit, id, price, activeStatus } = req.body;
     const newData = new ItemDepositDetail();
     newData.amount = amount;
-    newData.amountbalance = amountbalance;
     newData.price = price;
     newData.item = item;
     newData.itemDeposit = itemDeposit

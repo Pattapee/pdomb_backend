@@ -10,22 +10,25 @@ import {
   HTTPSTATUS_OK,
 } from '../constants/HttpStatus';
 import { ItemWithdrawDetail } from '../entities/ItemWithdrawDetail';
+import { ItemHistoryDepositRepository } from '../repositories/ItemHistoryDepositRepository'
 import { ItemWithdrawDetailRepository } from '../repositories/ItemWithdrawDetailRepository';
 
-let repository: ItemWithdrawDetailRepository;
-const initialize = () => {
+let repositoryIWDR: ItemWithdrawDetailRepository;
+const initializeIWDR = () => {
   const connection = getConnection();
-  repository = connection.getCustomRepository(ItemWithdrawDetailRepository);
+  repositoryIWDR = connection.getCustomRepository(ItemWithdrawDetailRepository);
+};
+let repositoryIHDR: ItemHistoryDepositRepository;
+const initializeIHDR = () => {
+  const connection = getConnection();
+  repositoryIHDR = connection.getCustomRepository(ItemHistoryDepositRepository);
 };
 
 export default class ItemWithdrawService {
-  public static getAllItemWithdrawDetail = async (
-    req: Request,
-    res: Response
-  ) => {
-    initialize();
+  public static getAllItemWithdrawDetail = async (req: Request, res: Response) => {
+    initializeIWDR();
     try {
-      const result = await repository.getAll();
+      const result = await repositoryIWDR.getAll();
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -33,13 +36,10 @@ export default class ItemWithdrawService {
     }
   };
 
-  public static getOneItemWithdrawDetail = async (
-    req: Request,
-    res: Response
-  ) => {
-    initialize();
+  public static getOneItemWithdrawDetail = async (req: Request, res: Response) => {
+    initializeIWDR();
     try {
-      const result = await repository.getOneByID(+req.params.id);
+      const result = await repositoryIWDR.getOneByID(+req.params.id);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -48,9 +48,9 @@ export default class ItemWithdrawService {
   };
 
   public static getAllByitemwithdraw = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWDR();
     try {
-      const result = await repository.getAllByItemwithdraw(req.body);
+      const result = await repositoryIWDR.getAllByItemwithdraw(req.body);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
@@ -58,20 +58,33 @@ export default class ItemWithdrawService {
     }
   };
 
-  public static saveitemWithdrawDetail = async (
-    req: Request,
-    res: Response
-  ) => {
-    initialize();
+  public static saveitemWithdrawDetail = async (req: Request, res: Response) => {
+    initializeIWDR();
+    initializeIHDR();
     const { amount, item, itemWithdraw } = req.body;
     const data = new ItemWithdrawDetail();
     data.amount = amount;
     data.item = item;
     data.itemWithdraw = itemWithdraw;
+    let amountchk = amount
+    const IHDRDetail = await repositoryIHDR.getAllbyamountbalance(item)
+    IHDRDetail.forEach(async (value) => {
+      if (amountchk >= value.amountbalance && amountchk > 0) {
+        amountchk -= value.amountbalance;
+        value.amountbalance = 0;
+        await repositoryIHDR.update(value.id, value)
+
+      } else if (amountchk < value.amountbalance && amountchk !== 0) {
+        value.amountbalance -= amountchk
+        amountchk = 0;
+        await repositoryIHDR.update(value.id, value)
+
+      }
+    })
     try {
       data.created = new Date();
       data.updated = new Date();
-      const result = await repository.Save(data);
+      const result = await repositoryIWDR.Save(data);
       res.status(HTTPSTATUS_CREATE).send(result);
     } catch (e) {
       console.error(e);
@@ -80,7 +93,7 @@ export default class ItemWithdrawService {
   };
 
   public static updateItemWithdrawDetail = async (req: Request, res: Response) => {
-    initialize();
+    initializeIWDR();
     const { amount, item, itemWithdraw, id, activeStatus } = req.body;
     const newData = new ItemWithdrawDetail();
     newData.amount = amount;
@@ -90,7 +103,7 @@ export default class ItemWithdrawService {
     newData.activeStatus = activeStatus;
     try {
       newData.updated = new Date();
-      const result = await repository.Update(newData.id, newData);
+      const result = await repositoryIWDR.Update(newData.id, newData);
       res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);

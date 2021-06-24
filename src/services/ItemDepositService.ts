@@ -142,15 +142,15 @@ export default class ItemService {
     initializeitem();
     const detail = await repositoryDepositDetail.getAllByItemdeposit(req.body)
     detail.forEach(async (value) => {
-      const item = (await repositoryItem.getOneByID(value.id))[0]
-      console.log(item)
-      // item.balance = (+item.balance - +value.amount)
-      // await repositoryItem.Update(item.id, item)
+      const item = _.first(await repositoryItem.getOneByID(value.item.id))
+      item.balance = (+item.balance - +value.amount)
+      item.updated = new Date()
+      await repositoryItem.Update(item.id, item)
     })
 
     try {
-      // const result = await repositoryDeposit.Delete(req.body);
-      res.status(HTTPSTATUS_OK).send(true);
+      const result = await repositoryDeposit.Delete(req.body);
+      res.status(HTTPSTATUS_OK).send(result);
     } catch (e) {
       console.error(e);
       res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' });
