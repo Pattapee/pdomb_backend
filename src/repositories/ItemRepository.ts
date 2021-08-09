@@ -1,4 +1,4 @@
-import { EntityRepository, MoreThanOrEqual, Repository } from 'typeorm'
+import { EntityRepository, getConnection, MoreThanOrEqual, Repository } from 'typeorm'
 import Item from '../entities/Item'
 import ItemType from '../entities/ItemType'
 
@@ -67,6 +67,15 @@ export class ItemRepository extends Repository<Item> {
   public async Update(id: number, item: Item): Promise<Item> {
     await this.manager.update(Item, id, item)
     return item
+  }
+
+  // fn getAllItemByLessThanMininum
+  public async getAllBylessthanmininum(): Promise<Item[]> {
+    const query = `select * from item
+    where balance <= minimum
+    and activeStatus = true`;
+    const result = await getConnection().query(query)
+    return result[0].countProduct
   }
 
 }

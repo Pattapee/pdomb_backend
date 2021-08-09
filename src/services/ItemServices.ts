@@ -63,6 +63,17 @@ export default class ItemService {
     }
   };
 
+  public static getAlllessthanmin = async (req: Request, res: Response) => {
+    initialize();
+    try {
+      const result = await repository.getOneByID(+req.params.id);
+      res.status(HTTPSTATUS_OK).send(result);
+    } catch (e) {
+      console.log(e);
+      res.status(HTTPSTATUS_NOTFOUND).send({ data: 'Invalid find Item !!!' });
+    }
+  }
+
   public static getOneBycodename = async (req: Request, res: Response) => {
     initialize();
     const {
